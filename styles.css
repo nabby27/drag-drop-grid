@@ -1,0 +1,41 @@
+html,
+body {
+  margin: 0;
+  padding: 10px;
+  background-color: rgb(78, 78, 78);
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: calc(8vw - 10px);
+  gap: 10px;
+}
+
+.image-container {
+  border: 1px solid rgb(255, 255, 255);
+  width: 100%;
+  height: 100%;
+}
+
+.image-container--placeholder {
+  background-color: rgb(44, 44, 44);
+  border: 1px dotted white;
+}
+
+.image-container--horizontal {
+  grid-column-end: span 3;
+  grid-row-end: span 2;
+}
+
+.image-container--vertical {
+  grid-column-end: span 2;
+  grid-row-end: span 3;
+}
+
+.image-source {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
