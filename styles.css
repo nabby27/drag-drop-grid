@@ -19,8 +19,13 @@ body {
 }
 
 .image-container--placeholder {
-  background-color: rgb(44, 44, 44);
-  border: 1px dotted white;
+  opacity: 0.4;
+  border: 1px solid white;
+}
+
+.image-container--hide {
+  opacity: 0;
+  /* transform: translateX(-9999px); */
 }
 
 .image-container--horizontal {

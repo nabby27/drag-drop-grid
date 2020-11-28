@@ -4,12 +4,12 @@ let imageContainerElements = [];
 let containerElement = null;
 
 let currentElementDrag = null;
+let currentElementDragCloned = null;
 let placeholder = null;
 
 function onInit() {
-  console.log('Init');
   registerElements();
-  addEvents();
+  addDragEvents();
 }
 
 function registerElements() {
@@ -17,56 +17,52 @@ function registerElements() {
   containerElement = document.getElementById('container');
 }
 
-function addEvents() {
+function addDragEvents() {
   imageContainerElements.forEach((imageContainerElement) => {
-    imageContainerElement.addEventListener('dragstart', handleDragStart, false);
-    imageContainerElement.addEventListener('dragenter', handleDragEnter, false);
-    imageContainerElement.addEventListener('dragend', handleDragEnd, false);
+    addDragEventsOnElement(imageContainerElement);
   });
 }
 
-function handleDragStart(event) {  
-  console.log('Drag Start');
-  console.log(event);
-  
-  currentElementDrag = this.cloneNode(true);
-  
-  createPlaceholder(this);
-  hideElementDragged(this);
+function handleDragStart() {   
+  currentElementDrag = this;
+  currentElementDragCloned = this.cloneNode(true);
+
+  createPlaceholder(currentElementDrag);
+  hideElementDragged(currentElementDrag);
 }
 
-function handleDragEnter(event) {
-  event.preventDefault();
-  
-  console.log('Drag Enter');
-  console.log(event);
-
+function handleDragEnter() {
   containerElement.insertBefore(placeholder, this);
 }
 
-function handleDragEnd(event) {  
-  console.log('Drag End');
-  console.log(event);
+function handleDragEnd() {
+  currentElementDrag.remove();
+  containerElement.replaceChild(currentElementDragCloned, placeholder);
 
-  containerElement.replaceChild(currentElementDrag, placeholder);
-
-  currentElementDrag = null;
-  placeholder = null;
+  addDragEventsOnElement(currentElementDragCloned)
 }
 
-function createPlaceholder(currentElementDrag) {
-  const classList = currentElementDrag.classList.value.split(' ');
+function addDragEventsOnElement(element) {
+  element.addEventListener('dragstart', handleDragStart, false);
+  element.addEventListener('dragenter', handleDragEnter, false);
+  element.addEventListener('dragend', handleDragEnd, false);
+}
+
+function createPlaceholder(element) {
+  const classList = element.classList.value.split(' ');
   classList.push('image-container--placeholder');
-
-  placeholder = document.createElement('div');
-  placeholder.classList.add(...classList);
+  
+  placeholder = element.cloneNode(true);
+  // placeholder = document.createElement('div');
+  placeholder.classList.add('image-container--placeholder');
 }
 
-function hideElementDragged(currentElementDrag) {
-  // currentElementDrag.style.visibility = 'hidden';
-  // currentElementDrag.style.position = 'absolute';
-  // currentElementDrag.style.width = '10px';
-  // currentElementDrag.style.height = '10px';
-  // currentElementDrag.style.transform = 'translateX(-9999px)';
-  // currentElementDrag.style.zIndex = '-1';
+function hideElementDragged(element) {
+  element.classList.add('image-container--hide');
+}
+
+function resetVariables() {
+  currentElementDrag = null;
+  currentElementDragCloned = null;
+  placeholder = null;
 }
