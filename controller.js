@@ -4,8 +4,6 @@ let imageContainerElements = [];
 let containerElement = null;
 
 let currentElementDrag = null;
-let currentElementDragCloned = null;
-let placeholder = null;
 
 function onInit() {
   registerElements();
@@ -13,7 +11,7 @@ function onInit() {
 }
 
 function registerElements() {
-  imageContainerElements = document.querySelectorAll('.image-container');
+  imageContainerElements = document.querySelectorAll('.element');
   containerElement = document.getElementById('container');
 }
 
@@ -25,21 +23,16 @@ function addDragEvents() {
 
 function handleDragStart() {   
   currentElementDrag = this;
-  currentElementDragCloned = this.cloneNode(true);
-
-  createPlaceholder(currentElementDrag);
-  hideElementDragged(currentElementDrag);
+  currentElementDrag.classList.add('element--placeholder');
 }
 
 function handleDragEnter() {
-  containerElement.insertBefore(placeholder, this);
+  containerElement.insertBefore(currentElementDrag, this);
 }
 
 function handleDragEnd() {
-  currentElementDrag.remove();
-  containerElement.replaceChild(currentElementDragCloned, placeholder);
-
-  addDragEventsOnElement(currentElementDragCloned)
+  currentElementDrag.classList.remove('element--placeholder');
+  resetVariables();
 }
 
 function addDragEventsOnElement(element) {
@@ -48,21 +41,6 @@ function addDragEventsOnElement(element) {
   element.addEventListener('dragend', handleDragEnd, false);
 }
 
-function createPlaceholder(element) {
-  const classList = element.classList.value.split(' ');
-  classList.push('image-container--placeholder');
-  
-  placeholder = element.cloneNode(true);
-  // placeholder = document.createElement('div');
-  placeholder.classList.add('image-container--placeholder');
-}
-
-function hideElementDragged(element) {
-  element.classList.add('image-container--hide');
-}
-
 function resetVariables() {
   currentElementDrag = null;
-  currentElementDragCloned = null;
-  placeholder = null;
 }
